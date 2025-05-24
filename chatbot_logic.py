@@ -1,8 +1,16 @@
-import requests
+from langchain_community.chat_models import ChatOllama
+from langchain.chains import ConversationChain
+from langchain.memory import ConversationBufferMemory
+
+llm = ChatOllama(model="mistral")  # or llama3, gemma, etc.
+
+memory = ConversationBufferMemory()
+
+chatbot = ConversationChain(
+    llm=llm,
+    memory=memory,
+    verbose=True
+)
 
 def get_response(user_input):
-    response = requests.post(
-        "http://localhost:11434/api/generate",
-        json={"model": "llama3", "prompt": user_input, "stream": False}
-    )
-    return response.json()["response"]
+    return chatbot.run(user_input)
